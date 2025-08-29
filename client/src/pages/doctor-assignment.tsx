@@ -94,7 +94,7 @@ export default function DoctorAssignment() {
   });
 
   // Get all patients to show assigned ones
-  const { data: allPatients = [] } = useQuery({
+  const { data: allPatients = [] } = useQuery<Patient[]>({
     queryKey: ["/api/patients"],
     refetchInterval: 5000,
   });
@@ -351,7 +351,7 @@ export default function DoctorAssignment() {
                               <SelectValue placeholder="Select a doctor" />
                             </SelectTrigger>
                             <SelectContent>
-                              {recommendedDoctors && recommendedDoctors.length > 0 && (
+                              {recommendedDoctors && Array.isArray(recommendedDoctors) && recommendedDoctors.length > 0 && (
                                 <>
                                   <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
                                     Recommended Based on Condition
@@ -370,7 +370,7 @@ export default function DoctorAssignment() {
                               <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
                                 All Available Doctors
                               </div>
-                              {getAvailableDoctors().length > 0 && getAvailableDoctors().map((doctor) => (
+                              {Array.isArray(getAvailableDoctors()) && getAvailableDoctors().length > 0 && getAvailableDoctors().map((doctor) => (
                                 <SelectItem key={doctor.id} value={doctor.id}>
                                   <div className="flex items-center space-x-2">
                                     <span className="font-medium">{doctor.name}</span>
