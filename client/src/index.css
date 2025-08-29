@@ -4,15 +4,15 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(210, 40%, 96%);
+  --background: hsl(200, 30%, 98%);
   --foreground: hsl(210, 11%, 15%);
   --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(210, 11%, 15%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(210, 11%, 15%);
-  --primary: hsl(221, 83%, 53%);
+  --primary: hsl(197, 71%, 73%);
   --primary-foreground: hsl(0, 0%, 98%);
-  --secondary: hsl(158, 64%, 52%);
+  --secondary: hsl(142, 69%, 58%);
   --secondary-foreground: hsl(0, 0%, 98%);
   --muted: hsl(210, 40%, 96%);
   --muted-foreground: hsl(215, 16%, 47%);
@@ -36,7 +36,7 @@
   --sidebar-accent-foreground: hsl(210, 11%, 15%);
   --sidebar-border: hsl(214, 32%, 91%);
   --sidebar-ring: hsl(221, 83%, 53%);
-  --font-sans: Inter, system-ui, sans-serif;
+  --font-sans: 'Source Sans Pro', Inter, system-ui, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 8px;
@@ -94,7 +94,23 @@
 
 @layer utilities {
   .gradient-bg {
-    background: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(230, 81%, 60%) 100%);
+    background: linear-gradient(135deg, hsl(197, 71%, 73%) 0%, hsl(200, 80%, 65%) 50%, hsl(142, 69%, 58%) 100%);
+  }
+  
+  .medical-card {
+    background: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(200, 30%, 99%) 100%);
+    border: 1px solid hsl(200, 20%, 90%);
+    box-shadow: 0 4px 12px hsla(200, 30%, 20%, 0.08);
+  }
+  
+  .medical-input {
+    border: 2px solid hsl(200, 20%, 85%);
+    transition: all 0.2s ease;
+  }
+  
+  .medical-input:focus {
+    border-color: hsl(197, 71%, 73%);
+    box-shadow: 0 0 0 3px hsla(197, 71%, 73%, 0.15);
   }
   
   .priority-1 { 

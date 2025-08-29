@@ -47,7 +47,7 @@ export default function TriageQueue({ patients }: TriageQueueProps) {
   };
 
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg medical-card">
       <CardHeader className="border-b border-border">
         <div className="flex items-center justify-between">
           <div>

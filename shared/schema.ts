@@ -18,7 +18,7 @@ export const patients = pgTable("patients", {
   injury: integer("injury").notNull(), // 1 = no, 2 = yes
   mental: integer("mental").notNull(), // 1 = alert, 2 = verbal, 3 = pain, 4 = unresponsive
   pain: integer("pain").notNull(), // 0 = no, 1 = yes
-  nrsPain: integer("nrs_pain"), // 1-10
+  nrsPain: integer("nrs_pain").default(0), // 0-10
   sbp: integer("sbp").notNull(), // systolic blood pressure
   dbp: integer("dbp").notNull(), // diastolic blood pressure
   hr: integer("hr").notNull(), // heart rate

@@ -26,19 +26,19 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
     resolver: zodResolver(insertPatientSchema),
     defaultValues: {
       name: "",
-      age: 0,
-      sex: 0,
-      arrivalMode: 0,
-      injury: 0,
-      mental: 0,
-      pain: 0,
-      nrsPain: 0,
-      sbp: 0,
-      dbp: 0,
-      hr: 0,
-      rr: 0,
-      bt: 0,
-      saturation: 0,
+      age: "" as any,
+      sex: "" as any,
+      arrivalMode: "" as any,
+      injury: "" as any,
+      mental: "" as any,
+      pain: "" as any,
+      nrsPain: "" as any,
+      sbp: "" as any,
+      dbp: "" as any,
+      hr: "" as any,
+      rr: "" as any,
+      bt: "" as any,
+      saturation: "" as any,
       diagnosis: "",
     },
   });
@@ -72,7 +72,7 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
   };
 
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg medical-card">
       <CardHeader className="border-b border-border">
         <CardTitle className="text-2xl font-bold">Patient Intake</CardTitle>
         <p className="text-muted-foreground">Enter patient information for AI triage assessment</p>
@@ -98,6 +98,7 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           {...field} 
                           placeholder="Enter full name"
                           data-testid="input-patient-name"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -117,7 +118,8 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="0"
                           max="120"
                           placeholder="Enter age"
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           data-testid="input-age"
                         />
                       </FormControl>
@@ -298,8 +300,10 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="40"
                           max="300"
                           placeholder="120"
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           data-testid="input-sbp"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -319,8 +323,10 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="20"
                           max="200"
                           placeholder="80"
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           data-testid="input-dbp"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -340,8 +346,10 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="30"
                           max="200"
                           placeholder="72"
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           data-testid="input-hr"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -361,8 +369,10 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="5"
                           max="50"
                           placeholder="16"
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           data-testid="input-rr"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -383,8 +393,10 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="30"
                           max="45"
                           placeholder="36.5"
-                          onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
                           data-testid="input-bt"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -404,8 +416,10 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                           min="70"
                           max="100"
                           placeholder="98"
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
                           data-testid="input-saturation"
+                          className="medical-input"
                         />
                       </FormControl>
                     </FormItem>
@@ -430,6 +444,7 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
                         rows={3}
                         placeholder="Enter chief complaint, symptoms, and preliminary diagnosis..."
                         data-testid="textarea-diagnosis"
+                        className="medical-input"
                       />
                     </FormControl>
                   </FormItem>
@@ -439,7 +454,7 @@ export default function PatientIntakeForm({ onPatientAdded }: PatientIntakeFormP
 
             <Button 
               type="submit" 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
+              className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground font-semibold py-4 text-lg shadow-lg transition-all duration-200 transform hover:scale-105"
               disabled={addPatientMutation.isPending}
               data-testid="button-submit-patient"
             >

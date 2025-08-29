@@ -46,7 +46,8 @@ export class MemStorage implements IStorage {
       ...patientData,
       id,
       timestamp: new Date(),
-      status: "waiting"
+      status: "waiting",
+      nrsPain: patientData.nrsPain ?? 0
     };
     this.patients.set(id, patient);
     return patient;

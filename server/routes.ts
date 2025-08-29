@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         injury: validatedData.injury,
         mental: validatedData.mental,
         pain: validatedData.pain,
-        nrsPain: validatedData.nrsPain,
+        nrsPain: validatedData.nrsPain ?? 0,
         sbp: validatedData.sbp,
         dbp: validatedData.dbp,
         hr: validatedData.hr,

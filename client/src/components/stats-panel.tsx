@@ -23,7 +23,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
     return (
       <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="shadow-lg animate-pulse">
+          <Card key={i} className="shadow-lg medical-card animate-pulse">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-muted rounded-lg"></div>
@@ -41,7 +41,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
 
   return (
     <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-      <Card className="shadow-lg" data-testid="card-critical-cases">
+      <Card className="shadow-lg medical-card" data-testid="card-critical-cases">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-destructive/10 rounded-lg flex items-center justify-center">
@@ -57,7 +57,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg" data-testid="card-urgent-cases">
+      <Card className="shadow-lg medical-card" data-testid="card-urgent-cases">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -73,7 +73,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg" data-testid="card-standard-cases">
+      <Card className="shadow-lg medical-card" data-testid="card-standard-cases">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center">
@@ -89,7 +89,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg" data-testid="card-avg-wait">
+      <Card className="shadow-lg medical-card" data-testid="card-avg-wait">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
