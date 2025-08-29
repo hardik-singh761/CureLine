@@ -29,6 +29,7 @@ export const patients = pgTable("patients", {
   triageLevel: integer("triage_level").notNull(), // 1-5 (1 = most critical)
   timestamp: timestamp("timestamp").defaultNow().notNull(),
   status: text("status").default("waiting").notNull(), // waiting, in_treatment, completed
+  assignedDoctorId: text("assigned_doctor_id"), // ID of assigned doctor
 });
 
 export const insertPatientSchema = createInsertSchema(patients).omit({

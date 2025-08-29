@@ -11,6 +11,7 @@ export interface IStorage {
   getAllPatients(): Promise<Patient[]>;
   getPatientById(id: string): Promise<Patient | undefined>;
   updatePatientStatus(id: string, status: string): Promise<Patient | undefined>;
+  assignPatientToDoctor(id: string, doctorId: string, status: string): Promise<Patient | undefined>;
   getQueuedPatients(): Promise<Patient[]>;
 }
 
@@ -47,7 +48,8 @@ export class MemStorage implements IStorage {
       id,
       timestamp: new Date(),
       status: "waiting",
-      nrsPain: patientData.nrsPain ?? 0
+      nrsPain: patientData.nrsPain ?? 0,
+      assignedDoctorId: null
     };
     this.patients.set(id, patient);
     return patient;
@@ -64,6 +66,17 @@ export class MemStorage implements IStorage {
   async updatePatientStatus(id: string, status: string): Promise<Patient | undefined> {
     const patient = this.patients.get(id);
     if (patient) {
+      patient.status = status;
+      this.patients.set(id, patient);
+      return patient;
+    }
+    return undefined;
+  }
+
+  async assignPatientToDoctor(id: string, doctorId: string, status: string): Promise<Patient | undefined> {
+    const patient = this.patients.get(id);
+    if (patient) {
+      patient.assignedDoctorId = doctorId;
       patient.status = status;
       this.patients.set(id, patient);
       return patient;

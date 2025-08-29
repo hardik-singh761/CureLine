@@ -122,6 +122,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Assign patient to doctor and update status
+  app.patch("/api/patients/:id/assign", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { doctorId, status } = req.body;
+      
+      if (!doctorId) {
+        return res.status(400).json({ error: "Doctor ID is required" });
+      }
+      
+      if (!["waiting", "in_treatment", "completed"].includes(status)) {
+        return res.status(400).json({ error: "Invalid status value" });
+      }
+
+      const updatedPatient = await storage.assignPatientToDoctor(id, doctorId, status);
+      
+      if (!updatedPatient) {
+        return res.status(404).json({ error: "Patient not found" });
+      }
+
+      res.json(updatedPatient);
+    } catch (error) {
+      console.error("Error assigning patient to doctor:", error);
+      res.status(500).json({ error: "Failed to assign patient to doctor" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

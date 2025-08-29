@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Heart } from "lucide-react";
+import { Heart, Users, Stethoscope } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
 import PatientIntakeForm from "@/components/patient-intake-form";
 import TriageQueue from "@/components/triage-queue";
 import StatsPanel from "@/components/stats-panel";
@@ -45,9 +47,21 @@ export default function TriageDashboard() {
                 <p className="text-sm opacity-90">Emergency Department Management</p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm opacity-90">Current Time</p>
-              <p className="font-semibold">{currentTime}</p>
+            <div className="flex items-center space-x-4">
+              <Link href="/doctors">
+                <Button 
+                  variant="outline" 
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white"
+                  data-testid="doctor-assignment-link"
+                >
+                  <Stethoscope className="w-4 h-4 mr-2" />
+                  Doctor Assignment
+                </Button>
+              </Link>
+              <div className="text-right">
+                <p className="text-sm opacity-90">Current Time</p>
+                <p className="font-semibold">{currentTime}</p>
+              </div>
             </div>
           </div>
         </div>
