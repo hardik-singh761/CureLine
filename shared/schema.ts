@@ -40,6 +40,10 @@ export const insertPatientSchema = createInsertSchema(patients).omit({
   timestamp: true,
   triageLevel: true,
   status: true,
+  assignedDoctorId: true,
+  originalTriageLevel: true,
+  overriddenTriageLevel: true,
+  overriddenBy: true,
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
