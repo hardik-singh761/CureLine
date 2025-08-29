@@ -43,6 +43,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all patients
+  app.get("/api/patients", async (_req, res) => {
+    try {
+      const allPatients = await storage.getAllPatients();
+      res.json(allPatients);
+    } catch (error) {
+      console.error("Error fetching all patients:", error);
+      res.status(500).json({ error: "Failed to fetch patients" });
+    }
+  });
+
   // Get busy doctors
   app.get("/api/doctors/busy", async (_req, res) => {
     try {

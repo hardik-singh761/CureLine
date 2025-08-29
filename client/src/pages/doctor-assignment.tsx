@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserCheck, Stethoscope, Users, ArrowRight, ArrowLeft } from "lucide-react";
+import { UserCheck, Stethoscope, Users, ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -93,6 +93,15 @@ export default function DoctorAssignment() {
     refetchInterval: 5000,
   });
 
+  // Get all patients to show assigned ones
+  const { data: allPatients = [] } = useQuery({
+    queryKey: ["/api/patients"],
+    refetchInterval: 5000,
+  });
+
+  // Filter for patients currently in treatment
+  const assignedPatients = allPatients.filter((patient: Patient) => patient.status === "in_treatment");
+
   // Assign patient to doctor mutation
   const assignPatientMutation = useMutation({
     mutationFn: async ({ patientId, doctorId }: { patientId: string; doctorId: string }) => {
@@ -106,6 +115,7 @@ export default function DoctorAssignment() {
       const doctor = doctors.find(d => d.id === variables.doctorId);
       queryClient.invalidateQueries({ queryKey: ["/api/patients/queue"] });
       queryClient.invalidateQueries({ queryKey: ["/api/patients/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
       toast({
         title: "Patient Assigned Successfully",
         description: `Patient has been assigned to ${doctor?.name} and removed from queue`,
@@ -121,6 +131,31 @@ export default function DoctorAssignment() {
       toast({
         title: "Assignment Failed",
         description: error.message || "Failed to assign patient to doctor",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const completePatientMutation = useMutation({
+    mutationFn: async (patientId: string) => {
+      const response = await apiRequest("DELETE", `/api/patients/${patientId}`);
+      return response.json();
+    },
+    onSuccess: (data, patientId) => {
+      const patient = allPatients.find((p: Patient) => p.id === patientId);
+      queryClient.invalidateQueries({ queryKey: ["/api/patients/queue"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/patients/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/doctors/busy"] });
+      toast({
+        title: "Treatment Completed",
+        description: `${patient?.name} has been successfully treated and removed from the system`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error Completing Treatment",
+        description: error.message || "Failed to complete patient treatment",
         variant: "destructive",
       });
     },
@@ -357,6 +392,73 @@ export default function DoctorAssignment() {
                           {assignPatientMutation.isPending ? "Assigning..." : "Assign & Remove from Queue"}
                           <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Patients Under Treatment Section */}
+        <Card className="shadow-lg medical-card">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="text-xl font-bold">Patients Under Treatment</CardTitle>
+            <p className="text-muted-foreground">Manage patients currently being treated by doctors</p>
+          </CardHeader>
+          <CardContent className="p-6">
+            {assignedPatients.length === 0 ? (
+              <div className="text-center py-12 space-y-2">
+                <CheckCircle2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-muted-foreground">No Patients in Treatment</h3>
+                <p className="text-muted-foreground">All patients are either waiting for assignment or have completed treatment.</p>
+              </div>
+            ) : (
+              <div className="space-y-4" data-testid="treatment-list">
+                {assignedPatients.map((patient: Patient) => {
+                  const priority = priorityConfig[patient.triageLevel as keyof typeof priorityConfig];
+                  const assignedDoctor = doctors.find(d => d.id === patient.assignedDoctorId);
+                  
+                  return (
+                    <div 
+                      key={patient.id}
+                      className="border border-border rounded-lg p-4 space-y-3 bg-card"
+                      data-testid={`treatment-patient-${patient.id}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className={`w-8 h-8 ${priority.color} rounded-full flex items-center justify-center font-bold text-sm`}>
+                            {patient.triageLevel}
+                          </div>
+                          <div>
+                            <h3 className="font-semibold" data-testid={`treatment-patient-name-${patient.id}`}>
+                              {patient.name}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              Age: {patient.age} • Assigned to: {assignedDoctor?.name} • Treatment started: {getTimeAgo(patient.timestamp)}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-4">
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-muted-foreground">Diagnosis:</p>
+                            <p className="text-sm" data-testid={`treatment-diagnosis-${patient.id}`}>
+                              {patient.diagnosis}
+                            </p>
+                          </div>
+                          
+                          <Button
+                            onClick={() => completePatientMutation.mutate(patient.id)}
+                            disabled={completePatientMutation.isPending}
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 shadow-lg transition-all duration-200"
+                            data-testid={`complete-treatment-${patient.id}`}
+                          >
+                            <CheckCircle2 className="w-4 h-4 mr-2" />
+                            {completePatientMutation.isPending ? "Completing..." : "Complete Treatment"}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   );
