@@ -87,6 +87,12 @@ export default function DoctorAssignment() {
     refetchInterval: 5000,
   });
 
+  // Fetch busy doctors
+  const { data: busyDoctors = [] } = useQuery<string[]>({
+    queryKey: ["/api/doctors/busy"],
+    refetchInterval: 5000,
+  });
+
   // Assign patient to doctor mutation
   const assignPatientMutation = useMutation({
     mutationFn: async ({ patientId, doctorId }: { patientId: string; doctorId: string }) => {
@@ -136,11 +142,21 @@ export default function DoctorAssignment() {
 
   const getRecommendedDoctors = (diagnosis: string) => {
     const lowerDiagnosis = diagnosis.toLowerCase();
-    return doctors.filter(doctor => 
-      doctor.conditions.some(condition => 
+    return doctors.filter(doctor => {
+      // Filter out busy doctors
+      const isBusy = busyDoctors.includes(doctor.id);
+      
+      // Check if doctor specializes in the condition
+      const isSpecialist = doctor.conditions.some(condition => 
         lowerDiagnosis.includes(condition)
-      )
-    );
+      );
+      
+      return isSpecialist && !isBusy;
+    });
+  };
+
+  const getAvailableDoctors = () => {
+    return doctors.filter(doctor => !busyDoctors.includes(doctor.id));
   };
 
   const getTimeAgo = (timestamp: Date) => {
@@ -190,22 +206,25 @@ export default function DoctorAssignment() {
 
         {/* Available Doctors Summary */}
         <div className="mb-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {doctors.map((doctor) => (
-            <Card key={doctor.id} className="medical-card" data-testid={`doctor-card-${doctor.id}`}>
-              <CardContent className="p-4 text-center">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <span className="text-primary font-semibold text-sm">{doctor.avatar}</span>
-                </div>
-                <h4 className="font-semibold text-sm mb-1" data-testid={`doctor-name-${doctor.id}`}>
-                  {doctor.name.split(' ').slice(1).join(' ')}
-                </h4>
-                <p className="text-xs text-muted-foreground mb-1">{doctor.specialty}</p>
-                <Badge variant="outline" className="text-xs">
-                  {doctor.status}
-                </Badge>
-              </CardContent>
-            </Card>
-          ))}
+          {doctors.map((doctor) => {
+            const isBusy = busyDoctors.includes(doctor.id);
+            return (
+              <Card key={doctor.id} className={`medical-card ${isBusy ? 'opacity-60' : ''}`} data-testid={`doctor-card-${doctor.id}`}>
+                <CardContent className="p-4 text-center">
+                  <div className={`w-12 h-12 ${isBusy ? 'bg-red-100' : 'bg-primary/10'} rounded-full flex items-center justify-center mx-auto mb-2`}>
+                    <span className={`${isBusy ? 'text-red-600' : 'text-primary'} font-semibold text-sm`}>{doctor.avatar}</span>
+                  </div>
+                  <h4 className="font-semibold text-sm mb-1" data-testid={`doctor-name-${doctor.id}`}>
+                    {doctor.name.split(' ').slice(1).join(' ')}
+                  </h4>
+                  <p className="text-xs text-muted-foreground mb-1">{doctor.specialty}</p>
+                  <Badge variant={isBusy ? "destructive" : "outline"} className="text-xs">
+                    {isBusy ? "Busy" : "Available"}
+                  </Badge>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Patient Assignment List */}
@@ -316,7 +335,7 @@ export default function DoctorAssignment() {
                               <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
                                 All Available Doctors
                               </div>
-                              {doctors.map((doctor) => (
+                              {getAvailableDoctors().map((doctor) => (
                                 <SelectItem key={doctor.id} value={doctor.id}>
                                   <div className="flex items-center space-x-2">
                                     <span className="font-medium">{doctor.name}</span>

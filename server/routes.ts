@@ -17,37 +17,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get queue statistics
+  // Get queue statistics  
   app.get("/api/patients/stats", async (_req, res) => {
     try {
+      const stats = await storage.getPatientStats();
       const allPatients = await storage.getAllPatients();
-      const queuedPatients = await storage.getQueuedPatients();
       
       const priorityCounts = {
-        critical: queuedPatients.filter(p => p.triageLevel === 1).length,
-        urgent: queuedPatients.filter(p => p.triageLevel === 2).length,
-        semiUrgent: queuedPatients.filter(p => p.triageLevel === 3).length,
-        standard: queuedPatients.filter(p => p.triageLevel === 4).length,
-        nonUrgent: queuedPatients.filter(p => p.triageLevel === 5).length,
+        critical: stats.priorityCounts['1'] || 0,
+        urgent: stats.priorityCounts['2'] || 0,
+        semiUrgent: stats.priorityCounts['3'] || 0,
+        standard: stats.priorityCounts['4'] || 0,
+        nonUrgent: stats.priorityCounts['5'] || 0,
       };
 
-      // Calculate average wait time (approximate)
-      const avgWaitTime = queuedPatients.length > 0 
-        ? Math.round(queuedPatients.reduce((sum, patient) => {
-            const waitMinutes = (Date.now() - patient.timestamp.getTime()) / (1000 * 60);
-            return sum + waitMinutes;
-          }, 0) / queuedPatients.length)
-        : 0;
-
       res.json({
-        totalInQueue: queuedPatients.length,
+        totalInQueue: stats.totalInQueue,
         priorityCounts,
-        avgWaitTime,
+        avgWaitTime: stats.averageWaitTime,
         totalProcessed: allPatients.length
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
       res.status(500).json({ error: "Failed to fetch statistics" });
+    }
+  });
+
+  // Get busy doctors
+  app.get("/api/doctors/busy", async (_req, res) => {
+    try {
+      const busyDoctors = await storage.getBusyDoctors();
+      res.json(busyDoctors);
+    } catch (error) {
+      console.error("Error fetching busy doctors:", error);
+      res.status(500).json({ error: "Failed to fetch busy doctors" });
     }
   });
 
@@ -146,6 +149,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error assigning patient to doctor:", error);
       res.status(500).json({ error: "Failed to assign patient to doctor" });
+    }
+  });
+
+  // Remove patient from queue
+  app.delete("/api/patients/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const removed = await storage.removePatient(id);
+      
+      if (!removed) {
+        return res.status(404).json({ error: "Patient not found" });
+      }
+
+      res.json({ success: true, message: "Patient removed successfully" });
+    } catch (error) {
+      console.error("Error removing patient:", error);
+      res.status(500).json({ error: "Failed to remove patient" });
+    }
+  });
+
+  // Override patient priority
+  app.patch("/api/patients/:id/priority", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { newPriority, doctorId } = req.body;
+      
+      if (!newPriority || !doctorId) {
+        return res.status(400).json({ error: "New priority and doctor ID are required" });
+      }
+      
+      if (newPriority < 1 || newPriority > 5) {
+        return res.status(400).json({ error: "Priority must be between 1 and 5" });
+      }
+
+      const updatedPatient = await storage.overridePatientPriority(id, newPriority, doctorId);
+      
+      if (!updatedPatient) {
+        return res.status(404).json({ error: "Patient not found" });
+      }
+
+      res.json(updatedPatient);
+    } catch (error) {
+      console.error("Error overriding patient priority:", error);
+      res.status(500).json({ error: "Failed to override patient priority" });
     }
   });
 

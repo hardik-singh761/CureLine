@@ -28,8 +28,11 @@ export const patients = pgTable("patients", {
   diagnosis: text("diagnosis").notNull(),
   triageLevel: integer("triage_level").notNull(), // 1-5 (1 = most critical)
   timestamp: timestamp("timestamp").defaultNow().notNull(),
-  status: text("status").default("waiting").notNull(), // waiting, in_treatment, completed
+  status: text("status").default("waiting").notNull(), // waiting, in_treatment, completed, removed
   assignedDoctorId: text("assigned_doctor_id"), // ID of assigned doctor
+  originalTriageLevel: integer("original_triage_level").notNull(), // AI-generated triage level
+  overriddenTriageLevel: integer("overridden_triage_level"), // Doctor-overridden triage level
+  overriddenBy: text("overridden_by"), // Doctor who overrode the priority
 });
 
 export const insertPatientSchema = createInsertSchema(patients).omit({
