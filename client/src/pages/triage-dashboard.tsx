@@ -43,7 +43,7 @@ export default function TriageDashboard() {
                 <Heart className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-xl font-bold">AI Triage System</h1>
+                <h1 className="text-xl font-bold">CureLine</h1>
                 <p className="text-sm opacity-90">Emergency Department Management</p>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function TriageDashboard() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <Heart className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">AI Triage System</h3>
+                <h3 className="text-lg font-bold text-foreground">CureLine</h3>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Advanced emergency department management system powered by artificial intelligence for optimal patient care and resource allocation.
@@ -125,10 +125,10 @@ export default function TriageDashboard() {
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-foreground uppercase tracking-wide">Support</h4>
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Emergency: 911</p>
+                <p className="text-sm text-muted-foreground">Emergency: 112</p>
                 <p className="text-sm text-muted-foreground">IT Support: ext. 2080</p>
                 <p className="text-sm text-muted-foreground">System Admin: ext. 2090</p>
-                <p className="text-sm text-muted-foreground">help@hospital.org</p>
+                <p className="text-sm text-muted-foreground">help@cureline.org</p>
               </div>
             </div>
           </div>
@@ -136,11 +136,11 @@ export default function TriageDashboard() {
           {/* Bottom Bar */}
           <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground">
-              © 2024 AI Triage System. Advanced Emergency Department Management.
+              © 2025 CureLine. Advanced Emergency Department Management.
             </p>
             <div className="flex items-center space-x-6 mt-4 md:mt-0">
               <p className="text-xs text-muted-foreground">Version 2.1.0</p>
-              <p className="text-xs text-muted-foreground">Last Updated: August 2024</p>
+              <p className="text-xs text-muted-foreground">Last Updated: August 2025</p>
               <p className="text-xs text-muted-foreground">Uptime: 99.9%</p>
             </div>
           </div>

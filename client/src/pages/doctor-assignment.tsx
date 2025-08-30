@@ -23,29 +23,29 @@ const doctors = [
   },
   {
     id: "dr-johnson",
-    name: "Dr. Michael Johnson", 
+    name: "Dr. Manoj Gupta", 
     specialty: "Cardiology",
     department: "Cardiology",
     conditions: ["chest pain", "cardiac", "heart", "blood pressure", "hypertension", "cardiovascular"],
-    avatar: "MJ",
+    avatar: "MG",
     status: "available"
   },
   {
     id: "dr-williams",
-    name: "Dr. Emily Williams",
+    name: "Dr. Kavita Jain",
     specialty: "Internal Medicine",
     department: "Internal Medicine", 
     conditions: ["fever", "infection", "diabetes", "internal", "general medicine", "chronic"],
-    avatar: "EW",
+    avatar: "KJ",
     status: "available"
   },
   {
     id: "dr-brown",
-    name: "Dr. Robert Brown",
+    name: "Dr. Zubeen Mohsin",
     specialty: "Orthopedics",
     department: "Orthopedics",
     conditions: ["fracture", "bone", "joint", "injury", "orthopedic", "sprain", "muscle"],
-    avatar: "RB",
+    avatar: "ZM",
     status: "available"
   },
   {
@@ -59,11 +59,11 @@ const doctors = [
   },
   {
     id: "dr-miller",
-    name: "Dr. James Miller",
+    name: "Dr. Pooja Thakur",
     specialty: "Pulmonology",
     department: "Pulmonology",
     conditions: ["breathing", "respiratory", "lung", "asthma", "pneumonia", "cough"],
-    avatar: "JM",
+    avatar: "PT",
     status: "available"
   }
 ];
