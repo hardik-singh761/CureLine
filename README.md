@@ -1,5 +1,5 @@
 # AI Triage System
-
+[The OathKeepers_CureLine.pptx](https://github.com/user-attachments/files/22057559/The.OathKeepers_CureLine.pptx)
 ## Overview
 
 This is an AI-powered emergency department triage system that automatically assigns priority levels to patients based on their medical data. The application consists of a React frontend with Express.js backend, using machine learning to predict triage levels (1-5, where 1 is most critical). The system provides real-time queue management, patient intake forms, and statistical dashboards for emergency department staff.
